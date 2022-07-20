@@ -149,12 +149,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
         }
     );
 
-    const params = posts.results.map(post => ({
-        params: { slug: post.uid },
+    const paths = posts.results.map(post => ({
+        params: {
+            slug: post.uid,
+        },
     }));
 
     return {
-        paths: params,
+        paths,
         fallback: true,
     };
 };
@@ -165,27 +167,30 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const prismic = getPrismicClient();
     const response = await prismic.getByUID('posts', String(slug), {});
 
-    const postData = {
+    const contentPosts = response.data.content.map(post => {
+        return {
+            heading: post.heading,
+            body: post.body,
+        };
+    });
+
+    const post = {
+        first_publication_date: response.first_publication_date,
         data: {
             title: response.data.title,
             subtitle: response.data.subtitle,
             banner: {
-                url: response.data.banner.url ?? '',
+                url: response.data.banner.url,
             },
             author: response.data.author,
-            content: response.data.content.map(content => ({
-                heading: content.heading,
-                body: content.body,
-            })),
+            content: contentPosts,
         },
         uid: response.uid,
-        first_publication_date: response.first_publication_date,
-    } as Post;
+    };
 
+    // TODO
     return {
-        props: {
-            post: postData,
-        },
-        revalidate: 60 * 60 * 24,
+        props: { post },
+        revalidate: 10, // 10 In seconds
     };
 };

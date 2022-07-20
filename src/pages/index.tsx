@@ -113,13 +113,35 @@ export const getStaticProps: GetStaticProps = async () => {
         [Prismic.Predicates.at('document.type', 'posts')],
         {
             fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
-            pageSize: 2,
+            pageSize: 3,
         }
     );
 
+    const posts = postsResponse.results.map(post => {
+        return {
+            uid: post.uid,
+            first_publication_date: post.first_publication_date,
+            data: {
+                title: post.data.title,
+                subtitle: post.data.subtitle,
+                author: post.data.author,
+            },
+        };
+    });
+
     return {
         props: {
-            postsPagination: postsResponse,
+            postsPagination: {
+                results: posts,
+                next_page: postsResponse.next_page,
+            },
+            revalidate: 10, // In seconds
         },
     };
 };
+//     return {
+//         props: {
+//             postsPagination: postsResponse,
+//         },
+//     };
+// };

@@ -1,51 +1,51 @@
 .posts {
-    margin-top: 5rem;
-
-    a {
-        display: block;
-
-        & + a {
-            margin-top: 4rem;
-        }
-
-        strong {
-            color: var(--heading);
-            font-size: 2.8rem;
-            cursor: pointer;
-        }
-
-        p {
-            color: var(--body);
-            font-size: 1.8rem;
-            margin-top: 0.8rem;
-        }
-
-        > div {
-            display: flex;
-            align-items: center;
-            margin-top: 2rem;
-
-            span {
-                display: flex;
-                align-items: center;
-                color: var(--body);
-
-                svg {
-                    margin-right: 0.8rem;
-                }
-
-                & + span {
-                    margin-left: 2rem;
-                }
-            }
-        }
+    margin-top: 2em;
+  
+    > a {
+      display: block;
     }
-}
-
-.loadMoreButton {
-    color: var(--highlight);
-    background-color: transparent;
-    border: none;
-    font-size: 1.8rem;
-    margin-top: 4rem;
-}
+  
+    a + a {
+      margin-top: 3rem;
+    }
+  
+    button {
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      font-size: 1.125rem;
+      color: var(--highlight);
+      margin-top: 4rem;
+    }
+  }
+  
+  .post {
+    strong {
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: var(--heading);
+    }
+  
+    p {
+      margin-top: 0.5rem;
+      font-size: 1.125rem;
+    }
+  
+    ul {
+      list-style: none;
+      margin-top: 1.5rem;
+      display: flex;
+  
+      & li {
+        font-size: 0.875rem;
+  
+        & svg {
+          margin-right: 0.5rem;
+        }
+  
+        & + li {
+          margin-left: 1.625rem;
+        }
+      }
+    }
+  }

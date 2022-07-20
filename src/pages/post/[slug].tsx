@@ -141,13 +141,11 @@ export default function Post({ post }: PostProps): JSX.Element {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const prismic = getPrismicClient();
-    const posts = await prismic.query(
-        [Prismic.predicates.at('document.type', 'posts')],
-        {
-            fetch: ['posts.slug'],
-        }
-    );
+    const prismic = getPrismicClient({});
+    const posts = await prismic.getByType('posts', {
+        fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
+        pageSize: 3,
+    });
 
     const paths = posts.results.map(post => ({
         params: {
@@ -164,33 +162,33 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { slug } = params;
 
-    const prismic = getPrismicClient();
+    const prismic = getPrismicClient({});
     const response = await prismic.getByUID('posts', String(slug), {});
 
     const contentPosts = response.data.content.map(post => {
-        return {
-            heading: post.heading,
-            body: post.body,
-        };
-    });
-
-    const post = {
-        first_publication_date: response.first_publication_date,
-        data: {
-            title: response.data.title,
-            subtitle: response.data.subtitle,
-            banner: {
-                url: response.data.banner.url,
-            },
-            author: response.data.author,
-            content: contentPosts,
-        },
-        uid: response.uid,
-    };
-
-    // TODO
     return {
-        props: { post },
-        revalidate: 10, // 10 In seconds
+      heading: post.heading,
+      body: post.body,
     };
+  });
+
+  const post = {
+    first_publication_date: response.first_publication_date,
+    data: {
+      title: response.data.title,
+      subtitle: response.data.subtitle,
+      banner: {
+        url: response.data.banner.url,
+      },
+      author: response.data.author,
+      content: contentPosts,
+    },
+    uid: response.uid,
+  };
+
+  // TODO
+  return {
+    props: { post },
+    revalidate: 10, // 10 In seconds
+  };
 };
